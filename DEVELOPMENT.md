@@ -42,6 +42,38 @@ After bootstrapping, start the app in development mode:
 npm start
 ```
 
+## Building the App
+
+To build a release binary for your current platform:
+
+```shell
+npx tauri build --bundles app
+```
+
+This creates a bundled application at `target/release/bundle/macos/Yaak.app` (macOS) or equivalent for your platform.
+
+To also generate an installer (DMG on macOS, NSIS on Windows):
+
+```shell
+npx tauri build --bundles app,dmg
+```
+
+Build output locations:
+
+| Platform | App | Installer |
+|----------|-----|-----------|
+| macOS | `target/release/bundle/macos/Yaak.app` | `target/release/bundle/dmg/Yaak_<version>_<arch>.dmg` |
+| Windows | `target/release/bundle/nsis/` | `target/release/bundle/nsis/Yaak_<version>_<arch>-setup.exe` |
+| Linux | `target/release/bundle/appimage/` | `target/release/bundle/deb/` or `target/release/bundle/rpm/` |
+
+To run the built macOS app:
+
+```shell
+open target/release/bundle/macos/Yaak.app
+```
+
+_Note: Local builds are unsigned. On macOS, you may need to right-click the app and select "Open" to bypass Gatekeeper, or allow it in System Settings > Privacy & Security._
+
 ## SQLite Migrations
 
 New migrations can be created from the `src-tauri/` directory:
