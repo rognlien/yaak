@@ -53,6 +53,28 @@ impl<'a> DbContext<'a> {
             )?;
             info!("Created base environment {} for {workspace_id}", e.id);
             environments.push(e);
+
+            // Create default sub-environments for new workspaces
+            let defaults = [
+                ("Dev", "#059669", 0.0),
+                ("Stage", "#d97706", 1.0),
+                ("Prod", "#dc2626", 2.0),
+            ];
+            for (name, color, sort_priority) in defaults {
+                let sub = self.upsert_environment(
+                    &Environment {
+                        workspace_id: workspace_id.to_string(),
+                        name: name.to_string(),
+                        parent_model: "environment".to_string(),
+                        color: Some(color.to_string()),
+                        sort_priority,
+                        ..Default::default()
+                    },
+                    &UpdateSource::Background,
+                )?;
+                info!("Created default sub-environment {name} ({}) for {workspace_id}", sub.id);
+                environments.push(sub);
+            }
         }
 
         Ok(environments)
