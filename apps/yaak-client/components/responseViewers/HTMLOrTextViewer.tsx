@@ -10,6 +10,7 @@ import { getContentTypeFromHeaders } from "../../lib/model_util";
 import type { EditorProps } from "../core/Editor/Editor";
 import { IconButton } from "../core/IconButton";
 import { EmptyStateText } from "../EmptyStateText";
+import { MarkdownViewer } from "./MarkdownViewer";
 import { TextViewer } from "./TextViewer";
 import { WebPageViewer } from "./WebPageViewer";
 
@@ -33,6 +34,9 @@ export function HTMLOrTextViewer({ response, pretty, textViewerClassName }: Prop
   }
   if (rawTextBody.data == null) {
     return <EmptyStateText>Empty response</EmptyStateText>;
+  }
+  if (language === "markdown" && pretty) {
+    return <MarkdownViewer text={rawTextBody.data} />;
   }
   return (
     <HttpTextViewer
